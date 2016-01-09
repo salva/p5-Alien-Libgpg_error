@@ -19,8 +19,7 @@ my $builder = Alien::Base::ModuleBuild
            alien_msys           => 1,
            alien_stage_install  => 1,
            alien_build_commands => [ '%c --prefix=%s --disable-doc --disable-languages',
-                                     (($^O eq 'MSWin32') ? '%x -E "say q.s/install-data-hook(?!:)//" Makefile.' : ()),
-                                     (($^O eq 'MSWin32') ? '%x -i.bak -pe "s/install-data-hook(?!:)//" Makefile' : ()),
+                                     '%x ../../helpers/fix-makefile.pl',
                                      'make' ],
                                    );
 
