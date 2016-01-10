@@ -3,6 +3,63 @@ use strict;
 use warnings;
 use Alien::Base::ModuleBuild;
 
+my $class = Alien::Base::ModuleBuild->subclass( class => 'Alien::Libpgp_error::Builder',
+                                                code => <<'EOC');
+
+use strict;
+use warnings;
+
+sub alien_check_installed_version {
+  my $self = shift;
+  my $version = $self->config_data('system_library_version');
+  unless (defined $version) {
+    # $self->alien_helper->{pkg_config} ||= 'Alien::Base::PkgConfig->pkg_config_command';
+    $version = $self->SUPER::alien_check_installed_version(@_);
+    chomp $version;
+    $self->config_data('system_library_version', $version);
+  }
+  $version;
+}
+
+sub use_installed_version {
+  my $self = shift;
+  if (defined (my $type = $self->config_data('install_type'))) {
+    return ($type eq 'system');
+  }
+
+  !$Alien::Base::ModuleBuild::Force and
+    $self->alien_check_installed_version
+}
+
+sub system_libgpg_error_config_get {
+  my ($self, @keys) = @_;
+  my %result = $self->do_system(join(' ', 'gpg-error-config', map "--$_", @keys));
+  if ($result{success}) {
+    my $out = $result{stdout};
+    chomp $out;
+    return $out
+  }
+  return;
+}
+
+sub alien_provides_cflags {
+  my $self = shift;
+  if ($self->use_installed_version) {
+    return $self->system_libgpg_error_config_get('cflags');
+  }
+  return;
+}
+
+sub alien_provides_libs {
+  my $self = shift;
+  if ($self->use_installed_version) {
+    return $self->system_libgpg_error_config_get('libs');
+  }
+  return;
+}
+
+EOC
+
 my $builder = Alien::Base::ModuleBuild
     ->new( module_name          => 'Alien::Libgpg_error',
            license              => 'perl',
@@ -21,6 +78,8 @@ my $builder = Alien::Base::ModuleBuild
            alien_build_commands => [ '%c --prefix=%s --disable-doc --disable-languages',
                                      '%x ../../helpers/fix-makefile.pl',
                                      'make' ],
-                                   );
+
+           alien_version_check  => 'gpg-error-config --version',
+         );
 
 $builder->create_build_script();
