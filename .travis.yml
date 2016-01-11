@@ -13,4 +13,3 @@ env:
   - NO_ALIEN_FORCE=1
 script:
   - perl Build.PL && ./Build manifest && perl Build.PL && ./Build && ./Build test
-  
