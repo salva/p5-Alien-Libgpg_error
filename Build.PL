@@ -9,6 +9,8 @@ my $class = Alien::Base::ModuleBuild->subclass( class => 'Alien::Libpgp_error::B
 use strict;
 use warnings;
 
+$ENV{FTP_PASSIVE} = 1;
+
 sub alien_check_installed_version {
   my $self = shift;
   my $version = $self->config_data('system_library_version');
