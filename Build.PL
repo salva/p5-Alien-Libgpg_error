@@ -77,7 +77,7 @@ my $builder = Alien::Base::ModuleBuild
                                      location => '/gcrypt/libgpg-error/',
                                      pattern => qr/^libgpg-error-(\d+\.\d+)\.tar\.gz$/ },
            alien_msys           => 1,
-           alien_stage_install  => 1,
+           alien_stage_install  => 0,
            alien_build_commands => [ '%c --prefix=%s --disable-doc --disable-languages',
                                      '%x ../../helpers/fix-makefile.pl',
                                      'make' ],
