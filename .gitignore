@@ -3,8 +3,10 @@ Build
 Build.bat
 MANIFEST
 MYMETA*
+META*
 _alien
 _share
 _build
 compilet*
 blib
+Alien-Libgpg_error-*
