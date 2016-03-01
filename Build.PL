@@ -67,7 +67,7 @@ my $builder = Alien::Base::ModuleBuild
            license              => 'perl',
            dist_author          => q{Salvador Fandiño <sfandino@yahoo.com>},
            dist_version_from    => 'lib/Alien/Libgpg_error.pm',
-           configure_requires   => { 'Alien::Base' => '0.024',
+           configure_requires   => { 'Alien::Base::ModuleBuild' => '0.024',
                                      'Module::Build' => '0.36' },
            build_requires       => { 'Test::More' => 0 },
            add_to_cleanup       => [ 'Alien-Libgpg_error-*' ],
